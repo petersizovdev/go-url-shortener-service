@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	Env string `yaml:"env" env-default:"local"`
-	StoragePath string `yaml:"storage_path" env-required:"rtue"`
+	StoragePath string `yaml:"storage_path" env-required:"true"`
 	HTTPServer `yaml:"http_server"`
 }
 
@@ -24,6 +24,7 @@ func MustLoad() Config {
 	configPath := os.Getenv("CONFIG_PATH")
 	if configPath == "" {
 		log.Fatal("unable to connect env for cfg by path")
+
 	}
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err){

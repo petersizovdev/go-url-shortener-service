@@ -2,6 +2,8 @@ package main
 
 import (
 	"go-url-shortener-service/internal/config"
+	"go-url-shortener-service/internal/lib/slog/sl"
+	"go-url-shortener-service/internal/storage/sqlite"
 	"log/slog"
 	"os"
 )
@@ -24,6 +26,15 @@ func main (){
 
 
 	//storage
+	storage, err := sqlite.New(cfg.StoragePath)
+	if err != nil {
+		log.Error("failed to init db", sl.Err(err) )
+		os.Exit(1)
+
+	}
+
+	_ = storage
+
 	//router
 	//server
 }
