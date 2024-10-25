@@ -3,7 +3,9 @@ package main
 import (
 	"go-url-shortener-service/internal/config"
 	"go-url-shortener-service/internal/http-server/handlers/url/save"
+	"go-url-shortener-service/internal/http-server/redirect"
 	"go-url-shortener-service/internal/storage/sqlite"
+	
 	"log/slog"
 	"net/http"
 	"os"
@@ -44,6 +46,7 @@ func main() {
 		router.Use(middleware.URLFormat)
 
 	router.Post("/url", save.New(log, storage))
+	router.Get("/{alias}", redirect.New(log, storage))
 
 	//server
 	log.Info("starting server", slog.String("address", cfg.Address))
