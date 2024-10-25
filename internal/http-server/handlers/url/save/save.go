@@ -1,7 +1,10 @@
 package save
 
 import (
+	"errors"
 	resp "go-url-shortener-service/internal/lib/api/response"
+	"go-url-shortener-service/internal/lib/random"
+	"go-url-shortener-service/internal/storage"
 	"log/slog"
 	"net/http"
 
@@ -62,6 +65,29 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc{
 		if alias == ""{
 			alias = random.NewRandomString(aliesLenght)
 		}
+
+		id, err := urlSaver.SaveURL(req.URL, alias)
+		if errors.Is(err, storage.ErrURLExist){
+			log.Info("url alredy exist", slog.String("url", req.URL))
+
+			render.JSON(w, r, resp.Error("url alrady exists"))
+
+			return
+		}
+		if err != nil {
+			log.Error("failed to add url")
+
+			render.JSON(w, r, resp.Error("failed to add url"))
+
+			return
+		}
+
+		log.Info("url added", slog.Int64("id", id))
+
+		render.JSON(w, r, Response{
+			Response: resp.OK(),
+			Alias:    alias,
+		})
 
 	}
 }

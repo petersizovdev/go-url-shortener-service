@@ -2,8 +2,8 @@ package random
 
 import (
 	"time"
+	"math/rand"
 
-	"golang.org/x/exp/rand"
 )
 
 
