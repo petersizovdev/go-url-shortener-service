@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"go-url-shortener-service/configs"
+	"go-url-shortener-service/pkg/res"
 	"net/http"
 )
 
@@ -18,6 +19,10 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		fmt.Print(handler.Config.Auth.Secret)
 		fmt.Println("Login")
+		data := LoginResponse{
+			Token: "123",
+		}
+		res.Json(w, data, 200)
 	}
 }
 
