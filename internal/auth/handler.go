@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"go-url-shortener-service/configs"
+	"go-url-shortener-service/pkg/req"
 	"go-url-shortener-service/pkg/res"
 	"net/http"
 )
@@ -16,9 +17,12 @@ type AuthHandler struct {
 }
 
 func (handler *AuthHandler) Login() http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Print(handler.Config.Auth.Secret)
-		fmt.Println("Login")
+	return func(w http.ResponseWriter, r *http.Request) {
+		body, err := req.HandleBody[LoginRequest](&w, r)
+		if err != nil {
+			return
+		}
+		fmt.Println(body)
 		data := LoginResponse{
 			Token: "123",
 		}
@@ -27,8 +31,12 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 }
 
 func (handler *AuthHandler) Register() http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Println("Register")
+	return func(w http.ResponseWriter, r *http.Request) {
+		body, err := req.HandleBody[RegisterRequest](&w, r)
+		if err != nil {
+			return
+		}
+		fmt.Println(body)
 	}
 }
 
